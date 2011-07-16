@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+
+#Hello World!
+
+#подключаем библиотеку pygtk и gtk
+imporЗt pygtk
+pygtk.require('2.0')
+import gtk
+
+class HelloWorld2:
+    def callback(self, widget, data):
+        print "Hello again - %s was pressed" % data
+
+    def delete_event(self, widget, event, data=None):
+        gtk.main_quit()
+        return False
+
+    def __init__(self):
+        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
+        self.window.set_title("Hello Buttons!")
+        self.window.c
