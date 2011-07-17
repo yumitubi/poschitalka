@@ -13,7 +13,12 @@ import os
 
 
 
-#
+
+
+
+#######################################################
+#основной класс, на основе которого рисуется интерфейс#
+#######################################################
 class poschitalka(gtk.Window):
 
     def __init__(self):
@@ -41,7 +46,7 @@ class poschitalka(gtk.Window):
 #        vbox = gtk.VBox(False, 0)
 
         
-        ############################################
+        #############################################
         #--------------рисуем меню------------------#
         menub = gtk.MenuBar()
         #меню файл
@@ -50,6 +55,7 @@ class poschitalka(gtk.Window):
         filem.set_submenu(filemenu)
         #пункт меню открыть
         openf = gtk.MenuItem("Открыть файл")
+        openf.connect("activate", self.on_clk_open)
         filemenu.append(openf)
         #пункт меню открыть
         savestat = gtk.MenuItem("Сохранить статистику")
@@ -58,7 +64,6 @@ class poschitalka(gtk.Window):
         close = gtk.MenuItem("Выход")
         close.connect("activate", gtk.main_quit)#по нажатии закрываем программу
         filemenu.append(close)#добавляем в меню пункт выход
-
         #меню справка 
         helpmenu = gtk.Menu()
         helper = gtk.MenuItem("Справка")
@@ -69,7 +74,7 @@ class poschitalka(gtk.Window):
         #пункт меню о программе
         about = gtk.MenuItem("О программе")
         helpmenu.append(about)
-        about.connect("activate", self.on_clicked)#диалог О программе
+        about.connect("activate", self.on_clk_about)#диалог О программе
 
 
         #добавляем созданные меню в меню бар
@@ -77,7 +82,8 @@ class poschitalka(gtk.Window):
         menub.append(helper)
 
 
-        #################################################
+
+        ##################################################
         #-------------------кнопки-----------------------#
         btn_close = gtk.Button("Выход")#рисуем кнопку выход, тем не менее, для нее еще нужен будет обработчик
         btn_close.connect("clicked", gtk.main_quit)#обрабатываем клик на кнопку, как закрытие окна
@@ -86,7 +92,7 @@ class poschitalka(gtk.Window):
         #сохранить статистику
         btn_save_stat = gtk.Button("Сохранить статистику")
         btn_save_stat.set_tooltip_text("Нажмите, что бы сохранить статистику по тексту в файл")
-        btn_save_stat.set_size_request(180, 30)
+        btn_save_stat.set_size_request(190, 30)
 
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -144,9 +150,8 @@ class poschitalka(gtk.Window):
         self.show_all()#даем команду все показать
 
 
-
-        #открытие диалого about
-    def on_clicked(self, widget):
+    #открытие диалога about
+    def on_clk_about(self, widget):
         about = gtk.AboutDialog()
         about.set_program_name("Посчиталка")
         about.set_version("0.1")
@@ -156,6 +161,14 @@ class poschitalka(gtk.Window):
         # about.set_logo(gtk.gdk.pixbuf_new_from_file("battery.png"))
         about.run()
         about.destroy()
+    
+
+
+    #диалог открытия файла
+    def on_clk_open(self, widget):
+        openfile = gtk.FileSelection("Открыть файл")
+        openfile.run()
+        openfile.destroy()
 
 
 
