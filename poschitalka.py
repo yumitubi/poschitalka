@@ -10,6 +10,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk, sys
 import os
+import string
 
 
 
@@ -168,8 +169,11 @@ class poschitalka(gtk.Window):
     def on_clk_open(self, widget):
         openfile = gtk.FileSelection("Открыть файл")
         openfile.run()
+        p = open(openfile.get_filename, 'r')
+        per = p.readline()
+        print p
         openfile.destroy()
-
+    
 
 
 #выполняем то, что определили функциями выше
