@@ -14,7 +14,28 @@ import string
 import os
 
 filetest = open('test_text.txt', 'r')
-text = filetest.readline();
+text = filetest.readlines();
 print text
 
+class calculate():
 
+    def __init__(self):
+        print text
+
+    #функция считает количество символов без пробелов и без переносов строки
+    def symbols():
+        print text
+
+
+    #функция считает количество пробелов в тексте
+    def probel():
+        print text
+
+
+
+    def abzac():
+        print probel
+        
+
+
+        
