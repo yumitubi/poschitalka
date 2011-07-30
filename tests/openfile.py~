@@ -1,0 +1,41 @@
+    1	#!/usr/bin/env python
+    2	
+    3	# example filesel.py
+    4	
+    5	import pygtk
+    6	pygtk.require('2.0')
+    7	import gtk
+    8	
+    9	class FileSelectionExample:
+   10	    # Get the selected filename and print it to the console
+   11	    def file_ok_sel(self, w):
+   12	        print "%s" % self.filew.get_filename()
+   13	
+   14	    def destroy(self, widget):
+   15	        gtk.main_quit()
+   16	
+   17	    def __init__(self):
+   18	        # Create a new file selection widget
+   19	        self.filew = gtk.FileSelection("File selection")
+   20	
+   21	        self.filew.connect("destroy", self.destroy)
+   22	        # Connect the ok_button to file_ok_sel method
+   23	        self.filew.ok_button.connect("clicked", self.file_ok_sel)
+   24	    
+   25	        # Connect the cancel_button to destroy the widget
+   26	        self.filew.cancel_button.connect("clicked",
+   27	                                         lambda w: self.filew.destroy())
+   28	    
+   29	        # Lets set the filename, as if this were a save dialog,
+   30	        # and we are giving a default filename
+   31	        self.filew.set_filename("penguin.png")
+   32	    
+   33	        self.filew.show()
+   34	
+   35	def main():
+   36	    gtk.main()
+   37	    return 0
+   38	
+   39	if __name__ == "__main__":
+   40	    FileSelectionExample()
+   41	    main()

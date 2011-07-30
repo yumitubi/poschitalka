@@ -38,50 +38,7 @@ class poschitalka(gtk.Window):
         self.set_title("Посчиталка")#обзываем заголовок
         self.set_size_request(550,450)#размеры окна
         self.set_position(gtk.WIN_POS_CENTER)#ставим окно по центру
-        
         self.connect("destroy", gtk.main_quit)#обработчик кнопки на закрытие окна
-
-
-
-        #создаем VBOX
-#        vbox = gtk.VBox(False, 0)
-
-        
-        #############################################
-        #--------------рисуем меню------------------#
-        menub = gtk.MenuBar()
-        #меню файл
-        filemenu = gtk.Menu()
-        filem = gtk.MenuItem("Файл")
-        filem.set_submenu(filemenu)
-        #пункт меню открыть
-        openf = gtk.MenuItem("Открыть файл")
-        openf.connect("activate", self.on_clk_open)
-        filemenu.append(openf)
-        #пункт меню открыть
-        savestat = gtk.MenuItem("Сохранить статистику")
-        filemenu.append(savestat)
-        #пункт меню выход
-        close = gtk.MenuItem("Выход")
-        close.connect("activate", gtk.main_quit)#по нажатии закрываем программу
-        filemenu.append(close)#добавляем в меню пункт выход
-        #меню справка 
-        helpmenu = gtk.Menu()
-        helper = gtk.MenuItem("Справка")
-        helper.set_submenu(helpmenu)
-        #пункт меню справка
-        helperitem = gtk.MenuItem("Справка")
-        helpmenu.append(helperitem)
-        #пункт меню о программе
-        about = gtk.MenuItem("О программе")
-        helpmenu.append(about)
-        about.connect("activate", self.on_clk_about)#диалог О программе
-
-
-        #добавляем созданные меню в меню бар
-        menub.append(filem)
-        menub.append(helper)
-
 
 
         ##################################################
@@ -118,11 +75,6 @@ class poschitalka(gtk.Window):
         statusbar = gtk.Statusbar()
         statusbar.push(1, "Ready")
         
-        #выравнивание
-        halign = gtk.Alignment(0, 0, 0, 0)
-        halign.add(titlestat)
-        menualign = gtk.Alignment(0, 0, 0, 0)
-        menualign.add(menub)
 
 
         #таблица для разметки содержимого
@@ -151,6 +103,59 @@ class poschitalka(gtk.Window):
         self.show_all()#даем команду все показать
 
 
+    
+class appmenu():
+    
+    def drawmenu():
+        #############################################
+        #--------------рисуем меню------------------#
+        menub = gtk.MenuBar()
+        #меню файл
+        filemenu = gtk.Menu()
+        filem = gtk.MenuItem("Файл")
+        filem.set_submenu(filemenu)
+        
+        #создаем объект диалога открытия файла
+        dialogof = opfile()
+        
+
+        #пункт меню открыть
+        openf = gtk.MenuItem("Открыть файл")
+        openf.connect("activate", dialogof.on_clk_open)
+        filemenu.append(openf)
+        #пункт меню открыть
+        savestat = gtk.MenuItem("Сохранить статистику")
+        filemenu.append(savestat)
+        #пункт меню выход
+        close = gtk.MenuItem("Выход")
+        close.connect("activate", gtk.main_quit)#по нажатии закрываем программу
+        filemenu.append(close)#добавляем в меню пункт выход
+        #меню справка 
+        helpmenu = gtk.Menu()
+        helper = gtk.MenuItem("Справка")
+        helper.set_submenu(helpmenu)
+        #пункт меню справка
+        helperitem = gtk.MenuItem("Справка")
+        helpmenu.append(helperitem)
+        #пункт меню о программе
+        about = gtk.MenuItem("О программе")
+        helpmenu.append(about)
+        about.connect("activate", self.on_clk_about)#диалог О программе
+
+
+        #добавляем созданные меню в меню бар
+        menub.append(filem)
+        menub.append(helper)
+
+
+        #выравнивание
+
+        halign = gtk.Alignment(0, 0, 0, 0)
+        halign.add(titlestat)
+        menualign = gtk.Alignment(0, 0, 0, 0)
+        menualign.add(appmenu())
+
+
     #открытие диалога about
     def on_clk_about(self, widget):
         about = gtk.AboutDialog()
@@ -162,9 +167,12 @@ class poschitalka(gtk.Window):
         # about.set_logo(gtk.gdk.pixbuf_new_from_file("battery.png"))
         about.run()
         about.destroy()
-    
 
 
+
+
+#класс по работе с диалогом открытия файла
+class opfile():
     #диалог открытия файла
     def on_clk_open(self, widget):
         openfile = gtk.FileSelection("Открыть файл")
@@ -178,5 +186,6 @@ class poschitalka(gtk.Window):
 
 #выполняем то, что определили функциями выше
 poschitalka()
+opfile()
 gtk.main()
 
