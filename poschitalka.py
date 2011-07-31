@@ -73,7 +73,7 @@ class poschitalka(gtk.Window):
         #aboutpunkt = aboutm()
         about = gtk.MenuItem("О программе")
         helpmenu.append(about)
-        about.connect("activate", aboutpunkt.on_clk_about())#диалог О программе
+        about.connect("activate", aboutpunkt.on_clk_about)#диалог О программе
 
 
         #добавляем созданные меню в меню бар
