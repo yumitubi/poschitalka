@@ -17,10 +17,20 @@ import aboutpunkt
 import openfile
 
 
+#определяем глобальные переменные
+#текстовый буфер
+txtbuf = gtk.TextBuffer()
+
 #######################################################
 #основной класс, на основе которого рисуется интерфейс#
 #######################################################
 class poschitalka(gtk.Window):
+
+
+    def replacetb():
+        txtbuf.set_buffer('Получилось')
+
+
 
     def __init__(self):
         #непонятно, что мы тут делаем
@@ -93,14 +103,18 @@ class poschitalka(gtk.Window):
         btn_save_stat = gtk.Button("Сохранить статистику")
         btn_save_stat.set_tooltip_text("Нажмите, что бы сохранить статистику по тексту в файл")
         btn_save_stat.set_size_request(190, 30)
+        
+        #тестовая кнопка
+        btn_test = gtk.Button("Изменить значение буфера")
+        btn_test.connect("clicked", self.replacetb)
 
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
         scroolwin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         
         #создаем текстовый буфер для помещения туда текста
-        txtbuf = gtk.TextBuffer()
         txtbuf.set_text('test')
+        
         
         #окно для редактирования текста
         wins = gtk.TextView()
@@ -139,6 +153,7 @@ class poschitalka(gtk.Window):
         table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем текстовое поле
         table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
         table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
+        table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
 
 
         #добавляем менюбар в vbox
@@ -154,7 +169,6 @@ class poschitalka(gtk.Window):
         
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
-    
 
 #выполняем то, что определили функциями выше
 poschitalka()

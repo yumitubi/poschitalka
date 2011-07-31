@@ -8,7 +8,7 @@ import gtk, sys
 
 def whatnamefile():
     namefile = openfile.get_filename()    
-    poschitalka.txtbuf.set_text(namefile)
+    txtbuf.set_text(namefile)
 
     #диалог открытия файла
 def on_clk_open(poschitalka):
