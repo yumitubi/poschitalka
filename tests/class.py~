@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+class a():
+    def chislo():
+        x = 1
+
+class b():
+    def chislo2():
+        y = 3
+    def summ():
+        z = a.x+b.x
+        print z
+
+a()
+b.chislo()
+b.summ()
