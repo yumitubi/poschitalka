@@ -13,7 +13,8 @@ import os
 import string
 
 #подключаем дополнительные модули
-import aboutpunkt
+import aboutpunkt 
+import openfile
 
 
 #######################################################
@@ -50,7 +51,7 @@ class poschitalka(gtk.Window):
         
         #пункт меню открыть
         openf = gtk.MenuItem("Открыть файл")
-        openf.connect("activate", self.on_clk_open)
+        openf.connect("activate", openfile.on_clk_open)
         filemenu.append(openf)
         #пункт меню открыть
         savestat = gtk.MenuItem("Сохранить статистику")
@@ -75,7 +76,6 @@ class poschitalka(gtk.Window):
         helpmenu.append(about)
         about.connect("activate", aboutpunkt.on_clk_about)#диалог О программе
 
-
         #добавляем созданные меню в меню бар
         menub.append(filem)
         menub.append(helper)
@@ -84,7 +84,7 @@ class poschitalka(gtk.Window):
 
 
         ##################################################
-        #-------------------кнопки-----------------------#
+        #-------------------кнопки----------------------#
         btn_close = gtk.Button("Выход")#рисуем кнопку выход, тем не менее, для нее еще нужен будет обработчик
         btn_close.connect("clicked", gtk.main_quit)#обрабатываем клик на кнопку, как закрытие окна
         btn_close.set_tooltip_text("Нажмите, чтобы выйти из программы")
@@ -97,13 +97,18 @@ class poschitalka(gtk.Window):
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
         scroolwin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-                
+        
+        #создаем текстовый буфер для помещения туда текста
+        txtbuf = gtk.TextBuffer()
+        txtbuf.set_text('test')
+        
         #окно для редактирования текста
         wins = gtk.TextView()
         wins.set_editable(True)#разрешаем редактировать текс в текстовом поле
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
         wins.set_cursor_visible(True)#разрешаем отображать курсор
         wins.set_wrap_mode(gtk.WRAP_WORD)#устанавливаем в текстовом буфере перенос по словам
+        wins.set_buffer(txtbuf)
         #table.attach(wins, 0, 2, 1, 3, gtk.FILL | gtk.EXPAND, gtk.FILL | gtk.EXPAND, 1, 1)
         #прописываем окно просмотра текста в прокручиваемой области
         scroolwin.add(wins)
@@ -149,24 +154,7 @@ class poschitalka(gtk.Window):
         
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
-
-
-
-    #диалог открытия файла
-    def on_clk_open(self, widget):
-        openfile = gtk.FileSelection("Открыть файл")
-        openfile.run()
-        p = open(openfile.get_filename, 'r')
-        per = p.readline()
-        print p
-        openfile.destroy()
-
-
     
-
-
-
-
 
 #выполняем то, что определили функциями выше
 poschitalka()
