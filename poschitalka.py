@@ -14,12 +14,37 @@ import string
 
 #подключаем дополнительные модули
 import aboutpunkt 
-import openfile
+#import openfile
 
 
 #определяем глобальные переменные
 #текстовый буфер
+
 txtbuf = gtk.TextBuffer()
+#создаем текстовый буфер для помещения туда текста
+txtbuf.set_text('test')
+
+
+def whatnamefile(poschitalka, poschitalka2):
+
+    """узнаем имя файла"""
+    namefile = openfile.get_filename()    
+    txtbuf.set_text(namefile)
+
+    
+    #диалог открытия файла
+def on_clk_open():
+    
+    """открытие файла"""
+    openfile = gtk.FileSelection("Открыть файл")
+    openfile.run()
+    openfile.ok_button.connect("clicked", whatnamefile)
+    openfile.show()
+
+
+
+
+
 
 #######################################################
 #основной класс, на основе которого рисуется интерфейс#
@@ -56,7 +81,7 @@ class poschitalka(gtk.Window):
         
         #пункт меню открыть
         openf = gtk.MenuItem("Открыть файл")
-        openf.connect("activate", openfile.on_clk_open)
+        openf.connect("activate", on_clk_open)
         filemenu.append(openf)
         #пункт меню открыть
         savestat = gtk.MenuItem("Сохранить статистику")
@@ -100,15 +125,15 @@ class poschitalka(gtk.Window):
         btn_save_stat.set_size_request(190, 30)
         
         #тестовая кнопка
-        btn_test = gtk.Button("Изменить значение буфера")
-        btn_test.connect("clicked", self.replacetb())
+        btn_test = gtk.Button("Открыть файл")
+        btn_test.connect("clicked", lambda a: on_clk_open())
 
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
         scroolwin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        
-        #создаем текстовый буфер для помещения туда текста
-        txtbuf.set_text('test')
+
+
+
         
         
         #окно для редактирования текста
@@ -165,8 +190,10 @@ class poschitalka(gtk.Window):
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
 
-    def replacetb(btn_test):
-        txtbuf.set_text('получилось')
+        #вообще неясно, почему в данную функцию требуется помещать два аргумента, но подругому эта штука не работает о_О
+
+
+
 
 #выполняем то, что определили функциями выше
 poschitalka()
