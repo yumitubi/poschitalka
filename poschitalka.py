@@ -15,7 +15,7 @@ import string
 #подключаем дополнительные модули
 import aboutpunkt 
 #import openfile
-
+#import fileselection
 
 #определяем глобальные переменные
 #текстовый буфер
@@ -23,27 +23,6 @@ import aboutpunkt
 txtbuf = gtk.TextBuffer()
 #создаем текстовый буфер для помещения туда текста
 txtbuf.set_text('test')
-
-
-def whatnamefile(poschitalka, poschitalka2):
-
-    """узнаем имя файла"""
-    namefile = openfile.get_filename()    
-    txtbuf.set_text(namefile)
-
-    
-    #диалог открытия файла
-def on_clk_open():
-    
-    """открытие файла"""
-    openfile = gtk.FileSelection("Открыть файл")
-    openfile.run()
-    openfile.ok_button.connect("clicked", whatnamefile)
-    openfile.show()
-
-
-
-
 
 
 #######################################################
@@ -81,7 +60,7 @@ class poschitalka(gtk.Window):
         
         #пункт меню открыть
         openf = gtk.MenuItem("Открыть файл")
-        openf.connect("activate", on_clk_open)
+        openf.connect("activate", FileSelectionNum().on_clk_open)
         filemenu.append(openf)
         #пункт меню открыть
         savestat = gtk.MenuItem("Сохранить статистику")
@@ -126,7 +105,7 @@ class poschitalka(gtk.Window):
         
         #тестовая кнопка
         btn_test = gtk.Button("Открыть файл")
-        btn_test.connect("clicked", lambda a: on_clk_open())
+        btn_test.connect("clicked", FileSelectionNum().on_clk_open)
 
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -193,9 +172,63 @@ class poschitalka(gtk.Window):
         #вообще неясно, почему в данную функцию требуется помещать два аргумента, но подругому эта штука не работает о_О
 
 
+    # def whatnamefile(poschitalka, poschitalka2):
+        
+    #     """узнаем имя файла"""
+    #     namefile = openfile.get_filename()    
+    #     txtbuf.set_buffer(namefile)
+
+
+    #     #диалог открытия файла
+    # def on_clk_open(btn_test, fileselection):
+
+    #     """диалог открытие файла"""
+    #     openfile = gtk.FileSelection("Открыть файл")
+    #     openfile.run()
+    #     openfile.connect("destroy", poschitalka.destroy_fs)
+    #     openfile.ok_button.connect("clicked", poschitalka.whatnamefile)
+    #     openfile.show()
+
+
+# Класс который предоставляет диалоговое окно для выбора файла.
+# Очень долго возился, что бы суметь передать из диалогового окна
+# данные в переменную.
+class FileSelectionNum:
+    # получает путь до файла и передает его в глобальную переменную программы.
+    def file_ok_sel(FileSelectionNum, w):
+        filename = FileSelectionNum.filew.get_filename()# получаем имя файла
+        txtbuf.set_text(filename) 
+        FileSelectionNum.filew.destroy()
+	
+    def destroy_fs(FileSelectionNum, widget):
+        FileSelectionNum.filew.destroy()
+
+    def on_clk_open(FileSelectionNum, r):
+        # Create a new file selection widget
+        FileSelectionNum.filew = gtk.FileSelection("Выбор файла")
+
+        FileSelectionNum.filew.connect("destroy", FileSelectionNum.destroy_fs)
+        # Connect the ok_button to file_ok_sel method
+        FileSelectionNum.filew.ok_button.connect("clicked", FileSelectionNum.file_ok_sel)
+   
+        # Connect the cancel_button to destroy the widget
+        FileSelectionNum.filew.cancel_button.connect("clicked", FileSelectionNum.destroy_fs)
+        # Lets set the filename, as if this were a save dialog,
+        # and we are giving a default filename
+        FileSelectionNum.filew.set_filename("penguin.png")
+        FileSelectionNum.filew.show()
+
+    # def main():
+    #     gtk.main()
+    #     return 0
+
+# if __name__ == "__main__":
+#     FileSelectionExample()
+#     main()
 
 
 #выполняем то, что определили функциями выше
+# FileSelectionNum()
 poschitalka()
 gtk.main()
 
