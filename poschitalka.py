@@ -22,8 +22,8 @@ import aboutpunkt
 
 txtbuf = gtk.TextBuffer()
 #создаем текстовый буфер для помещения туда текста
-txtbuf.set_text('test')
-
+txtbuf.set_text('')
+paragraph = gtk.Label("Количество абзацев: ")
 
 #######################################################
 #основной класс, на основе которого рисуется интерфейс#
@@ -107,6 +107,10 @@ class poschitalka(gtk.Window):
         btn_test = gtk.Button("Открыть файл")
         btn_test.connect("clicked", FileSelectionNum().on_clk_open)
 
+        #подсчет статистики
+        btn_stat = gtk.Button("Подсчитать")
+        btn_stat.connect("clicked", self.sum_paragraph)
+
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
         scroolwin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -131,6 +135,8 @@ class poschitalka(gtk.Window):
         #вывод статистики
         titlestat = gtk.Label("Статистика текста:")
         
+        words = gtk.Label("Количество слов: ")
+        
         #статус бар
         statusbar = gtk.Statusbar()
         statusbar.push(1, "Ready")
@@ -138,6 +144,8 @@ class poschitalka(gtk.Window):
         #выравнивание
         halign = gtk.Alignment(0, 0, 0, 0)
         halign.add(titlestat)
+        halign_paragr = gtk.Alignment(0, 0, 0, 0)
+        halign_paragr.add(paragraph)
         menualign = gtk.Alignment(0, 0, 0, 0)
         menualign.add(menub)
         menualign
@@ -151,8 +159,10 @@ class poschitalka(gtk.Window):
         table.attach(btn_close, 7, 8, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку close
         table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем текстовое поле
         table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_paragr, 5, 8, 2, 3, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
         table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
         table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
+        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
 
 
         #добавляем менюбар в vbox
@@ -189,6 +199,9 @@ class poschitalka(gtk.Window):
     #     openfile.ok_button.connect("clicked", poschitalka.whatnamefile)
     #     openfile.show()
 
+    def sum_paragraph(label, w):
+        sum_par = str(txtbuf.get_line_count())
+        paragraph.set_text('Количество абзацев: '+sum_par)
 
 # Класс который предоставляет диалоговое окно для выбора файла.
 # Очень долго возился, что бы суметь передать из диалогового окна
@@ -196,8 +209,16 @@ class poschitalka(gtk.Window):
 class FileSelectionNum:
     # получает путь до файла и передает его в глобальную переменную программы.
     def file_ok_sel(FileSelectionNum, w):
-        filename = FileSelectionNum.filew.get_filename()# получаем имя файла
-        txtbuf.set_text(filename) 
+        txtbuf.set_text('')#очищаем текстовый буфер
+        filename = open(FileSelectionNum.filew.get_filename())# получаем имя файла и открывем его для чтения
+        stroki = filename.readlines()#читаем файл в список
+        #к сожалению текстовый буфер умеет получать только строки, списки он обрабатывает никак, поэтому пришлось
+        #заюзать цикл
+        for i in stroki:
+            txtbuf.insert_at_cursor(str(i))
+
+            #txtbuf.set_text(filename.readlines()) 
+        filename.close()# оставляем сборщика мусора без работы
         FileSelectionNum.filew.destroy()
 	
     def destroy_fs(FileSelectionNum, widget):
