@@ -135,7 +135,7 @@ class poschitalka(gtk.Window):
 
         #подсчет статистики
         btn_stat = gtk.Button("Подсчитать")
-        btn_stat.connect("clicked", self.sum_paragraph)
+        btn_stat.connect("clicked", SymbolCalculate().push_all)
 
         #создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -223,33 +223,57 @@ class poschitalka(gtk.Window):
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
 
-        #вообще неясно, почему в данную функцию требуется помещать два аргумента, но подругому эта штука не работает о_О
 
+    #############################################
+    # блок функций для расчета статистики по тексту
+    #############################################    
+    # def sum_char(label, w):
 
-    # def whatnamefile(poschitalka, poschitalka2):
+    # def sum_paragraph(label, w):
+
         
-    #     """узнаем имя файла"""
-    #     namefile = openfile.get_filename()    
-    #     txtbuf.set_buffer(namefile)
+class SymbolCalculate:
 
-
-    #     #диалог открытия файла
-    # def on_clk_open(btn_test, fileselection):
-
-    #     """диалог открытие файла"""
-    #     openfile = gtk.FileSelection("Открыть файл")
-    #     openfile.run()
-    #     openfile.connect("destroy", poschitalka.destroy_fs)
-    #     openfile.ok_button.connect("clicked", poschitalka.whatnamefile)
-    #     openfile.show()
-
-    def sum_paragraph(label, w):
+    def push_all(label, w):
+        # количество символов с пробелами
+        sum_ch = str(txtbuf.get_char_count())
+        sum_char_spase_label.set_text("Количество символов\nс пробелами: "+sum_ch)
+        # число абзацев
         sum_par = str(txtbuf.get_line_count())
-        paragraph.set_text('Количество абзацев: '+sum_par)
-
-
-
-
+        paragraph.set_text('Количество\nабзацев: '+sum_par)
+        # количество символов с пробелами
+        summ_chars_out_space = 0
+        end_buf = 1
+        iter = txtbuf.get_start_iter()
+        while end_buf:
+             proverka = iter.is_end()
+             if proverka == False:
+                  char = iter.get_char()
+                  if char <> ' ' and char <> '\n' and char <> '\t': 
+                       summ_chars_out_space = summ_chars_out_space + 1
+                       iter.forward_char()
+                  else:
+                       iter.forward_char()
+                       
+             else:
+                  end_buf = 0
+        sum_char_label.set_text("Количество символов\nбез пробелов: "+str(summ_chars_out_space))
+        # количество слов в тексте
+        iter = txtbuf.get_start_iter()
+        summ_words = 0
+        end_buf = 1
+        while end_buf:
+             proverka = iter.is_end()
+             if proverka == False:
+                  if iter.starts_word():
+                      summ_words = summ_words + 1
+                      iter.forward_char()
+                  else:
+                      iter.forward_char()
+             else:
+                  end_buf = 0
+        words.set_text("Количество слов\nв тексте: "+str(summ_words))          
+        
 #############################################################
 # Класс который предоставляет диалоговое окно для выбора файла.
 # Очень долго возился, что бы суметь передать из диалогового окна
