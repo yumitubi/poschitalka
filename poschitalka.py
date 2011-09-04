@@ -2,46 +2,40 @@
 ###########################################################
 #------ GNU GPL2 -----------------------------------------#
 ###########################################################
+#------ Autor by Mak Tomilov(c)2011-----------------------#
+###########################################################
 
 
-#подключаем библиотеку pygtk и gtk
+#####################################
+# подключаем библиотеку pygtk и gtk
+#####################################     
 try:
      import sys, pygtk
      pygtk.require('2.0')
-     import gtk, sys 
-     import os
-     import string
      
 except:
      print 'Не удалось импортировать модуль PyGTK'
      sys.exit(1)
 
+import gtk, sys 
+import os
+import string
 
-# import pygtk
-# pygtk.require('2.0')
-# import gtk, sys 
-# import os
-# import string
-
-
-#подключаем дополнительные модули
-import aboutpunkt 
-#import openfile
-#import fileselection
-
+####################################
+# подключаем самописанные модули
+######################################
+import aboutpunkt # диалог about
 
 #################################
 #определяем глобальные переменные
 ###################################
 
-
 #текстовый буфер
-
 txtbuf = gtk.TextBuffer()
 #создаем текстовый буфер для помещения туда текста
 txtbuf.set_text('')
 
-# переменные для статистики текство
+# переменные для статистики текста
 titlestat = gtk.Label("Статистика текста:")
 sum_char_spase_label = gtk.Label("Количество символов\nс пробелами: ")
 sum_char_label = gtk.Label("Количество символов\nбез пробелов: ")
@@ -52,108 +46,102 @@ paragraph = gtk.Label("Количество\nабзацев: ")
 words = gtk.Label("Количество слов\nв тексте: ")
 
 #######################################################
-#основной класс, на основе которого рисуется интерфейс#
+# основной класс, на основе которого рисуется интерфейс#
 #######################################################
 class poschitalka(gtk.Window):
-
 
     def __init__(self):
         #непонятно, что мы тут делаем
         super(poschitalka, self).__init__()
 
-
-#если вдруг надумаю показать иконку        
+# если вдруг надумаю показать иконку        
 #        try:
 #            self.set_icon_from_file("web.png")
 #        except Exception, e:
 #            print e.message
 #            sys.exit(1)
 
-
         self.set_title("Посчиталка")#обзываем заголовок
         self.set_size_request(650,550)#размеры окна
         self.set_position(gtk.WIN_POS_CENTER)#ставим окно по центру
         self.connect("destroy", gtk.main_quit)#обработчик кнопки на закрытие окна
 
-
         #############################################
-        #--------------рисуем меню------------------#
+        # рисуем меню
         menub = gtk.MenuBar()
-        #меню файл
+
+        # меню файл
         filemenu = gtk.Menu()
         filem = gtk.MenuItem("Файл")
         filem.set_submenu(filemenu)
         
-        #пункт меню открыть
+        # пункт меню открыть
         openf = gtk.MenuItem("Открыть файл")
         openf.connect("activate", FileSelectionNum().on_clk_open)
         filemenu.append(openf)
-        #пункт меню открыть
+
+        # пункт меню сохранить статистику
         savestat = gtk.MenuItem("Сохранить статистику")
         filemenu.append(savestat)
-        #пункт меню выход
+
+        # пункт меню выход
         close = gtk.MenuItem("Выход")
         close.connect("activate", gtk.main_quit)#по нажатии закрываем программу
         filemenu.append(close)#добавляем в меню пункт выход
-        #меню справка 
+
+        # меню справка 
         helpmenu = gtk.Menu()
         helper = gtk.MenuItem("Справка")
         helper.set_submenu(helpmenu)
-        #пункт меню справка
+
+        # пункт меню справка
         helperitem = gtk.MenuItem("Справка")
         helpmenu.append(helperitem)
 
-
-        #пункт меню о программе
-        #создаем объект класса aboutm
-        #aboutpunkt = aboutm()
+        #########################################
+        # пункт меню о программе
+        # создаем объект класса aboutm
         about = gtk.MenuItem("О программе")
         helpmenu.append(about)
         about.connect("activate", aboutpunkt.on_clk_about)#диалог О программе
 
-        #добавляем созданные меню в меню бар
+        # добавляем созданные меню в меню бар
         menub.append(filem)
         menub.append(helper)
 
-
-
-
         ##################################################
-        #-------------------кнопки----------------------#
+        # кнопки
         btn_close = gtk.Button("Выход")#рисуем кнопку выход, тем не менее, для нее еще нужен будет обработчик
         btn_close.connect("clicked", gtk.main_quit)#обрабатываем клик на кнопку, как закрытие окна
         btn_close.set_tooltip_text("Нажмите, чтобы выйти из программы")
         btn_close.set_size_request(65, 30)
-        #сохранить статистику
+
+        # сохранить статистику
         btn_save_stat = gtk.Button("Сохранить статистику")
         btn_save_stat.set_tooltip_text("Нажмите, что бы сохранить статистику по тексту в файл")
         btn_save_stat.set_size_request(190, 30)
         
-        #тестовая кнопка
+        # тестовая кнопка
         btn_test = gtk.Button("Открыть файл")
         btn_test.connect("clicked", FileSelectionNum().on_clk_open)
 
-        #подсчет статистики
+        # подсчет статистики
         btn_stat = gtk.Button("Подсчитать")
         btn_stat.connect("clicked", SymbolCalculate().push_all)
 
-        #создаем область для прокручивания
+        # создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
         scroolwin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-
-
-
         
-        
-        #окно для редактирования текста
+        # окно для редактирования текста
         wins = gtk.TextView()
         wins.set_editable(True)#разрешаем редактировать текс в текстовом поле
         wins.modify_fg(gtk.STATE_NORMAL, gtk.gdk.Color(5140, 5140, 5140))
         wins.set_cursor_visible(True)#разрешаем отображать курсор
         wins.set_wrap_mode(gtk.WRAP_WORD)#устанавливаем в текстовом буфере перенос по словам
         wins.set_buffer(txtbuf)
-        #table.attach(wins, 0, 2, 1, 3, gtk.FILL | gtk.EXPAND, gtk.FILL | gtk.EXPAND, 1, 1)
-        #прописываем окно просмотра текста в прокручиваемой области
+
+        # прописываем окно просмотра текста в прокручиваемой области
         scroolwin.add(wins)
 
 
@@ -186,52 +174,33 @@ class poschitalka(gtk.Window):
         menualign.add(menub)
         menualign
 
-
         #таблица для разметки содержимого
         table = gtk.Table(10, 8, True)
         table.set_row_spacings(4)#устанавливаем расстояния между строчками таблицы
         table.set_col_spacings(4)#устанавливаем расстояния между столбцами таблицы
         table.attach(menualign, 0, 8, 0, 1, gtk.FILL, gtk.FILL, 1, 1)
         table.attach(btn_close, 7, 8, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку close
-        table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем текстовое поле
+        table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем прокручиваемое поле
         table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)# надпись статистика текста
-
         table.attach(halign_sum_char_with, 5, 8, 2, 3, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов с пробелами
-        table.attach(halign_sum_char_out, 5, 8, 3, 4, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_average_word, 5, 8, 4, 5, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_average_word_in_sentence, 5, 8, 5, 6, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_sentence_in_parag, 5, 8, 6, 7, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_paragr, 5, 8, 7, 8, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_words, 5, 8, 8, 9, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-
+        table.attach(halign_sum_char_out, 5, 8, 3, 4, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов без пробелов
+        table.attach(halign_average_word, 5, 8, 4, 5, gtk.FILL, gtk.FILL, 0, 0)#среднее количество букв в слове
+        table.attach(halign_average_word_in_sentence, 5, 8, 5, 6, gtk.FILL, gtk.FILL, 0, 0)#среднее количество слов в предложении
+        table.attach(halign_sentence_in_parag, 5, 8, 6, 7, gtk.FILL, gtk.FILL, 0, 0)#среднее количество предложений в абзаце
+        table.attach(halign_paragr, 5, 8, 7, 8, gtk.FILL, gtk.FILL, 0, 0)#количество абзацев
+        table.attach(halign_words, 5, 8, 8, 9, gtk.FILL, gtk.FILL, 0, 0)#количество слов
         table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
         table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
-        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку stat
+        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку
 
-
-        #добавляем менюбар в vbox
-#        vbox.pack_start(menub, False, False, 0)
-#        vbox.pack_start(wins, True, True, 0)
-#        vbox.pack_start(table, False, False, 5)
-#        vbox.pack_end(statusbar, False, False, 0)
-
-
-#        fixed = gtk.Fixed()#создаем контейнер
-#        fixed.put(btn_close, 470, 415)#указываем координаты для кнопки
-#        fixed.put(menub, 0, 0)
-        
+        ################################################
+        # вывод созданных объектов на экран
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
 
-
-    #############################################
-    # блок функций для расчета статистики по тексту
-    #############################################    
-    # def sum_char(label, w):
-
-    # def sum_paragraph(label, w):
-
-        
+#####################################################
+# класс, который подсчитывает статистику по тексту
+####################################################        
 class SymbolCalculate:
 
     def push_all(label, w):
@@ -241,44 +210,55 @@ class SymbolCalculate:
         # число абзацев
         sum_par = str(txtbuf.get_line_count())
         paragraph.set_text('Количество\nабзацев: '+sum_par)
-        # количество символов с пробелами
-        summ_chars_out_space = 0
-        end_buf = 1
-        iter = txtbuf.get_start_iter()
+        
+        # количество символов без пробелов
+        # считает все символы кроме пробела, табуляции и перевода каретки
+        summ_chars_out_space = 0 # устанавливаем счетчик символов в 0
+        end_buf = 1 # флаг для проверки, конец буфера или нет
+        iter = txtbuf.get_start_iter() # создаем курсор
         while end_buf:
-             proverka = iter.is_end()
+             proverka = iter.is_end() # возвращает значение true, если курсор находится в конце буфера
              if proverka == False:
-                  char = iter.get_char()
-                  if char <> ' ' and char <> '\n' and char <> '\t': 
-                       summ_chars_out_space = summ_chars_out_space + 1
-                       iter.forward_char()
+                  char = iter.get_char() # получает символ под курсором
+                  if char <> ' ' and char <> '\n' and char <> '\t': # проверяем, является ли он пробелом, табом либо ентером 
+                       summ_chars_out_space = summ_chars_out_space + 1 # если нет, приплюсовываем к общему количеству символов
+                       iter.forward_char() # перемещаем курсор на один символ вперед
                   else:
-                       iter.forward_char()
+                       iter.forward_char() # иначе если это пробел, таб или ентер, просто передвигаем курсор на один символ вперед
                        
              else:
-                  end_buf = 0
-        sum_char_label.set_text("Количество символов\nбез пробелов: "+str(summ_chars_out_space))
-
-
+                  end_buf = 0 # иначе, если курсор в конце буфера, то ставим флаг в 0, что бы прервать цикл
+        sum_char_label.set_text("Количество символов\nбез пробелов: "+str(summ_chars_out_space)) # записываем в нужное поле
 
         # количество слов в тексте
+        # работает похожим образом, как и кол-во слов без пробелов
         iter = txtbuf.get_start_iter()
         summ_words = 0
         end_buf = 1
         while end_buf:
              proverka = iter.is_end()
              if proverka == False:
-                  if iter.starts_word():
-                      summ_words = summ_words + 1
-                      iter.forward_word_end()
+                  if iter.starts_word(): # проверяем, находится ли курсор в начале слова
+                      summ_words = summ_words + 1 # если да, то плюсум счетчик
+                      iter.forward_word_end()     # и переходим в конец слова
                   else:
-                      iter.forward_char()
+                      iter.forward_char() # если нет, просто переходим на один символ вперед до следующего начала слова
              else:
                   end_buf = 0
         words.set_text("Количество слов\nв тексте: "+str(summ_words))          
 
-        #среднее количество символов в слове
-        #описание алгоритма
+        # среднее количество символов в слове
+        # описание алгоритма:
+        # алгоритм получился развесистый и немного сложный, но тем не менее, работает
+        # следущим образом:
+        # в начале, как и в алгоритмах выше, сначала устанавливаем курсор в начале буфера,
+        # затем идет проверка на нахождение курсора вконце буфера, далее мы проверяем, находится
+        # ли курсор в начале слова. Если да, то устанавливаем flag = 1 и двигаем курсор на символ вперед,
+        # если нет то проверяем значение флага. Если флаг=1 и находится в конце слова, плюсуем счетчик,
+        # устанавливаем флаг в 0 и двигаемся на символ вперед. Если флаг = 1, и курсор не находится
+        # в конце слова, то просто плюсуем счетчик и сдвигаемся на символ вперед. Иначе, если
+        # курсор не находится на начале слова и флаг не установлен в 1, то просто двигаемся на символ
+        # вперед. Таким образом мы считаем только символы, заключенные между началом и концом слова
         iter = txtbuf.get_start_iter()
         summ_chars_av = 0
         end_buf = 1
@@ -308,8 +288,8 @@ class SymbolCalculate:
         else:
              average_word.set_text("Средняя длина\nслова: "+str(summ_chars_av/summ_words))       
                   
-        #среднее количество слов в предложении     
-        #считаем количество предложение в тексте     
+        # среднее количество слов в предложении     
+        # считаем количество предложение в тексте     
         iter = txtbuf.get_start_iter()
         summ_sentence = 0
         end_buf = 1
@@ -340,49 +320,47 @@ class SymbolCalculate:
 # данные в переменную.
 ##################################################################
 class FileSelectionNum:
+
     # получает путь до файла и передает его в глобальную переменную программы.
     def file_ok_sel(FileSelectionNum, w):
-        txtbuf.set_text('')#очищаем текстовый буфер
+        txtbuf.set_text('')# очищаем текстовый буфер
         filename = open(FileSelectionNum.filew.get_filename())# получаем имя файла и открывем его для чтения
-        stroki = filename.readlines()#читаем файл в список
-        #к сожалению текстовый буфер умеет получать только строки, списки он обрабатывает никак, поэтому пришлось
-        #заюзать цикл
+        stroki = filename.readlines()# читаем файл в список
+        # к сожалению текстовый буфер умеет получать только строки, списки он обрабатывает никак, поэтому пришлось
+        # заюзать цикл
         for i in stroki:
             txtbuf.insert_at_cursor(str(i))
 
-            #txtbuf.set_text(filename.readlines()) 
         filename.close()# оставляем сборщика мусора без работы
-        FileSelectionNum.filew.destroy()
-	
+        FileSelectionNum.filew.destroy() # убиваем окно открытия файла по нажатию кнопки ок
+
+    # убивает окно выбора файла
     def destroy_fs(FileSelectionNum, widget):
         FileSelectionNum.filew.destroy()
 
+    # обработка нажатия кнопки открыть
     def on_clk_open(FileSelectionNum, r):
-        # Create a new file selection widget
+        # создаем объект окно выбора файла
         FileSelectionNum.filew = gtk.FileSelection("Выбор файла")
 
+        # закрыть окно по нажатию крестика
         FileSelectionNum.filew.connect("destroy", FileSelectionNum.destroy_fs)
-        # Connect the ok_button to file_ok_sel method
+        # обработка кнопки ок
         FileSelectionNum.filew.ok_button.connect("clicked", FileSelectionNum.file_ok_sel)
    
-        # Connect the cancel_button to destroy the widget
+        # обработка кнопки cancel
         FileSelectionNum.filew.cancel_button.connect("clicked", FileSelectionNum.destroy_fs)
-        # Lets set the filename, as if this were a save dialog,
-        # and we are giving a default filename
-        FileSelectionNum.filew.set_filename("penguin.png")
+        # устанавливаем файл по умолчанию
+        FileSelectionNum.filew.set_filename("test_text.txt")
+        # показываем созданный объект окно выбора файла
         FileSelectionNum.filew.show()
 
-    # def main():
-    #     gtk.main()
-    #     return 0
-
-# if __name__ == "__main__":
-#     FileSelectionExample()
-#     main()
-
-
-#выполняем то, что определили функциями выше
-# FileSelectionNum()
+############################################################
+# выполняем то, что определили функциями выше
+############################################################# 
 poschitalka()
 gtk.main()
 
+#######################################
+#-------- THE END PROGRAMM -----------#
+#######################################
