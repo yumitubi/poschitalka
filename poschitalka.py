@@ -4,26 +4,52 @@
 ###########################################################
 
 
-
 #подключаем библиотеку pygtk и gtk
-import pygtk
-pygtk.require('2.0')
-import gtk, sys 
-import os
-import string
+try:
+     import sys, pygtk
+     pygtk.require('2.0')
+     import gtk, sys 
+     import os
+     import string
+     
+except:
+     print 'Не удалось импортировать модуль PyGTK'
+     sys.exit(1)
+
+
+# import pygtk
+# pygtk.require('2.0')
+# import gtk, sys 
+# import os
+# import string
+
 
 #подключаем дополнительные модули
 import aboutpunkt 
 #import openfile
 #import fileselection
 
+
+#################################
 #определяем глобальные переменные
+###################################
+
+
 #текстовый буфер
 
 txtbuf = gtk.TextBuffer()
 #создаем текстовый буфер для помещения туда текста
 txtbuf.set_text('')
-paragraph = gtk.Label("Количество абзацев: ")
+
+# переменные для статистики текство
+titlestat = gtk.Label("Статистика текста:")
+sum_char_spase_label = gtk.Label("Количество символов\nс пробелами: ")
+sum_char_label = gtk.Label("Количество символов\nбез пробелов: ")
+average_word = gtk.Label("Средняя длина\nслова: ")
+average_word_in_sentence = gtk.Label("Среднее количество\nслов в предложении: ")
+average_sentence_in_parag = gtk.Label("Среднее количество\nпредложений в абзаце: ")
+paragraph = gtk.Label("Количество\nабзацев: ")
+words = gtk.Label("Количество слов\nв тексте: ")
 
 #######################################################
 #основной класс, на основе которого рисуется интерфейс#
@@ -131,21 +157,31 @@ class poschitalka(gtk.Window):
         scroolwin.add(wins)
 
 
+        #################################        
+        # вывод статистики
+        ##################################        
         
-        #вывод статистики
-        titlestat = gtk.Label("Статистика текста:")
-        
-        words = gtk.Label("Количество слов: ")
-        
-        #статус бар
+        # статус бар
         statusbar = gtk.Statusbar()
         statusbar.push(1, "Ready")
         
-        #выравнивание
+        # выравнивание
         halign = gtk.Alignment(0, 0, 0, 0)
         halign.add(titlestat)
         halign_paragr = gtk.Alignment(0, 0, 0, 0)
         halign_paragr.add(paragraph)
+        halign_sum_char_out = gtk.Alignment(0, 0, 0, 0)
+        halign_sum_char_out.add(sum_char_spase_label)
+        halign_sum_char_with = gtk.Alignment(0, 0, 0, 0)
+        halign_sum_char_with.add(sum_char_label)
+        halign_average_word = gtk.Alignment(0, 0, 0, 0)
+        halign_average_word.add(average_word)
+        halign_average_word_in_sentence = gtk.Alignment(0, 0, 0, 0)
+        halign_average_word_in_sentence.add(average_word_in_sentence)
+        halign_sentence_in_parag = gtk.Alignment(0, 0, 0, 0)
+        halign_sentence_in_parag.add(average_sentence_in_parag)
+        halign_words = gtk.Alignment(0, 0, 0, 0)
+        halign_words.add(words)
         menualign = gtk.Alignment(0, 0, 0, 0)
         menualign.add(menub)
         menualign
@@ -158,11 +194,19 @@ class poschitalka(gtk.Window):
         table.attach(menualign, 0, 8, 0, 1, gtk.FILL, gtk.FILL, 1, 1)
         table.attach(btn_close, 7, 8, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку close
         table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем текстовое поле
-        table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
-        table.attach(halign_paragr, 5, 8, 2, 3, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)# надпись статистика текста
+
+        table.attach(halign_sum_char_with, 5, 8, 2, 3, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов с пробелами
+        table.attach(halign_sum_char_out, 5, 8, 3, 4, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_average_word, 5, 8, 4, 5, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_average_word_in_sentence, 5, 8, 5, 6, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_sentence_in_parag, 5, 8, 6, 7, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_paragr, 5, 8, 7, 8, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+        table.attach(halign_words, 5, 8, 8, 9, gtk.FILL, gtk.FILL, 0, 0)#добавляем выравнивание в таблице
+
         table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
         table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
-        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
+        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку stat
 
 
         #добавляем менюбар в vbox
@@ -203,9 +247,14 @@ class poschitalka(gtk.Window):
         sum_par = str(txtbuf.get_line_count())
         paragraph.set_text('Количество абзацев: '+sum_par)
 
+
+
+
+#############################################################
 # Класс который предоставляет диалоговое окно для выбора файла.
 # Очень долго возился, что бы суметь передать из диалогового окна
 # данные в переменную.
+##################################################################
 class FileSelectionNum:
     # получает путь до файла и передает его в глобальную переменную программы.
     def file_ok_sel(FileSelectionNum, w):
