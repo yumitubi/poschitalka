@@ -258,6 +258,9 @@ class SymbolCalculate:
              else:
                   end_buf = 0
         sum_char_label.set_text("Количество символов\nбез пробелов: "+str(summ_chars_out_space))
+
+
+
         # количество слов в тексте
         iter = txtbuf.get_start_iter()
         summ_words = 0
@@ -267,12 +270,69 @@ class SymbolCalculate:
              if proverka == False:
                   if iter.starts_word():
                       summ_words = summ_words + 1
-                      iter.forward_char()
+                      iter.forward_word_end()
                   else:
                       iter.forward_char()
              else:
                   end_buf = 0
         words.set_text("Количество слов\nв тексте: "+str(summ_words))          
+
+        #среднее количество символов в слове
+        #описание алгоритма
+        iter = txtbuf.get_start_iter()
+        summ_chars_av = 0
+        end_buf = 1
+        flag = 0
+        while end_buf:
+             proverka = iter.is_end()
+             if proverka == False:
+                  if iter.starts_word():
+                      flag = 1 
+                      summ_chars_av = summ_chars_av + 1
+                      iter.forward_char()
+                  else:
+                      if flag:
+                           if iter.ends_word():
+                                flag = 0
+                                summ_chars_av = summ_chars_av + 1
+                                iter.forward_char()
+                           else:
+                                summ_chars_av = summ_chars_av + 1
+                                iter.forward_char()
+                      else:
+                           iter.forward_char()
+             else:
+                  end_buf = 0
+        if summ_words == 0:
+             average_word.set_text("Средняя длина\nслова: 0")
+        else:
+             average_word.set_text("Средняя длина\nслова: "+str(summ_chars_av/summ_words))       
+                  
+        #среднее количество слов в предложении     
+        #считаем количество предложение в тексте     
+        iter = txtbuf.get_start_iter()
+        summ_sentence = 0
+        end_buf = 1
+        while end_buf:
+             proverka = iter.is_end()
+             if proverka == False:
+                  if iter.starts_sentence():
+                      summ_sentence = summ_sentence + 1
+                      iter.forward_sentence_end()
+                  else:
+                      iter.forward_char()
+             else:
+                  end_buf = 0
+        if summ_sentence == 0:
+             average_word_in_sentence.set_text("Среднее количество слов\nв предложении: 0")               
+        else:     
+             average_word_in_sentence.set_text("Среднее количество слов\nв предложении: "+str(summ_words/summ_sentence))          
+
+        # считаем среднее количество предложений в абзаце
+        if sum_par == 0:
+             average_sentence_in_parag.set_text("Среднее количество\nпредложений в абзаце: 0")
+        else:
+             average_sentence_in_parag.set_text("Среднее количество\nпредложений в абзаце: "+str(summ_sentence/int(sum_par)))
         
 #############################################################
 # Класс который предоставляет диалоговое окно для выбора файла.
