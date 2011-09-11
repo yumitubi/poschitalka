@@ -376,11 +376,7 @@ class SaveStat:
         save_stat_file = open('Statistics Text.txt', 'w')      
 
         s_titlestat = titlestat.get_text()
-        # забавный момент. функция split делит строку по заданному разделителю (в данном случае /)
-        # и создает список из строк. Но так как объект s_titlestat имеет несколько сток,
-        # разделенных \n, то split обрабатывает верно только последнюю строку, оставляя предыдущую строку как есть,
-        # вместо ожидаемого от нее удаления всего, что находится левее последнего '/'
-        save_stat_file.write(s_titlestat.split('/')[-1] + '\n')
+        save_stat_file.write(s_titlestat + '\n')
         
         s_sum_char_spase_label = sum_char_spase_label.get_text()
         save_stat_file.write(s_sum_char_spase_label.replace('\n', ' ')+'\n')
