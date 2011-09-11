@@ -120,14 +120,17 @@ class poschitalka(gtk.Window):
         btn_save_stat = gtk.Button("Сохранить статистику")
         btn_save_stat.set_tooltip_text("Нажмите, что бы сохранить статистику по тексту в файл")
         btn_save_stat.set_size_request(190, 30)
+        btn_save_stat.connect("clicked", SaveStat().save_stat_txt)
         
         # тестовая кнопка
         btn_test = gtk.Button("Открыть файл")
         btn_test.connect("clicked", FileSelectionNum().on_clk_open)
-
+        btn_test.set_size_request(130, 30)
+        
         # подсчет статистики
         btn_stat = gtk.Button("Подсчитать")
         btn_stat.connect("clicked", SymbolCalculate().push_all)
+        btn_stat.set_size_request(100, 30)
 
         # создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -355,6 +358,24 @@ class FileSelectionNum:
         # показываем созданный объект окно выбора файла
         FileSelectionNum.filew.show()
 
+######################################################
+# класс, который сохраняет статистику в файл
+######################################################
+class SaveStat:
+
+    def save_stat_txt(SaveStat, w):
+
+        save_stat_file = open('Statistics Text.txt', 'w')      
+        save_stat_file.write(titlestat.get_text()+'\n')
+        save_stat_file.write(sum_char_spase_label.get_text()+'\n')
+        save_stat_file.write(sum_char_label.get_text()+'\n')
+        save_stat_file.write(average_word.get_text()+'\n')
+        save_stat_file.write(average_word_in_sentence.get_text()+'\n') 
+        save_stat_file.write(average_sentence_in_parag.get_text()+'\n') 
+        save_stat_file.write(paragraph.get_text()+'\n')
+        save_stat_file.write(words.get_text()+'\n') 
+
+        
 ############################################################
 # выполняем то, что определили функциями выше
 ############################################################# 
