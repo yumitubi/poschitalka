@@ -36,7 +36,7 @@ txtbuf = gtk.TextBuffer()
 txtbuf.set_text('')
 
 # переменные для статистики текста
-titlestat = gtk.Label("Статистика текста:")
+titlestat = gtk.Label("Статистика текста для файла: ")
 sum_char_spase_label = gtk.Label("Количество символов\nс пробелами: ")
 sum_char_label = gtk.Label("Количество символов\nбез пробелов: ")
 average_word = gtk.Label("Средняя длина\nслова: ")
@@ -327,15 +327,21 @@ class FileSelectionNum:
     # получает путь до файла и передает его в глобальную переменную программы.
     def file_ok_sel(FileSelectionNum, w):
         txtbuf.set_text('')# очищаем текстовый буфер
-        filename = open(FileSelectionNum.filew.get_filename())# получаем имя файла и открывем его для чтения
+
+        s_filename = FileSelectionNum.filew.get_filename()
+        filename = open(s_filename)# получаем имя файла и открывем его для чтения
         stroki = filename.readlines()# читаем файл в список
         # к сожалению текстовый буфер умеет получать только строки, списки он обрабатывает никак, поэтому пришлось
         # заюзать цикл
         for i in stroki:
             txtbuf.insert_at_cursor(str(i))
 
+        titlestat.set_text('Статистика текста для файла:\n'+s_filename.split('/')[-1])    
         filename.close()# оставляем сборщика мусора без работы
         FileSelectionNum.filew.destroy() # убиваем окно открытия файла по нажатию кнопки ок
+
+
+        
 
     # убивает окно выбора файла
     def destroy_fs(FileSelectionNum, widget):
@@ -365,17 +371,39 @@ class SaveStat:
 
     def save_stat_txt(SaveStat, w):
 
-        save_stat_file = open('Statistics Text.txt', 'w')      
-        save_stat_file.write(titlestat.get_text()+'\n')
-        save_stat_file.write(sum_char_spase_label.get_text()+'\n')
-        save_stat_file.write(sum_char_label.get_text()+'\n')
-        save_stat_file.write(average_word.get_text()+'\n')
-        save_stat_file.write(average_word_in_sentence.get_text()+'\n') 
-        save_stat_file.write(average_sentence_in_parag.get_text()+'\n') 
-        save_stat_file.write(paragraph.get_text()+'\n')
-        save_stat_file.write(words.get_text()+'\n') 
 
+        save_stat_file = open('Statistics Text.txt', 'w')      
+
+        s_titlestat = titlestat.get_text()
+        # забавный момент. функция split делит строку по заданному разделителю (в данном случае /)
+        # и создает список из строк. Но так как объект s_titlestat имеет несколько сток,
+        # разделенных \n, то split обрабатывает верно только последнюю строку, оставляя предыдущую строку как есть,
+        # вместо ожидаемого от нее удаления всего, что находится левее последнего '/'
+        save_stat_file.write(s_titlestat.split('/')[-1] + '\n')
         
+        s_sum_char_spase_label = sum_char_spase_label.get_text()
+        save_stat_file.write(s_sum_char_spase_label.replace('\n', ' ')+'\n')
+
+        s_sum_char_label = sum_char_label.get_text()
+        save_stat_file.write(s_sum_char_label.replace('\n', ' ')+'\n')
+
+        s_average_word = average_word.get_text()
+        save_stat_file.write(s_average_word.replace('\n', ' ')+'\n')
+
+        s_average_word_in_sentence = average_word_in_sentence.get_text()
+        save_stat_file.write(s_average_word_in_sentence.replace('\n', ' ')+'\n')
+
+        s_average_sentence_in_parag = average_sentence_in_parag.get_text()
+        save_stat_file.write(s_average_sentence_in_parag.replace('\n', ' ')+'\n')
+
+        s_paragraph = paragraph.get_text()
+        save_stat_file.write(s_paragraph.replace('\n', ' ')+'\n')
+
+        s_words = words.get_text()
+        save_stat_file.write(s_words.replace('\n', ' ')+'\n') 
+
+        save_stat_file.close()
+
 ############################################################
 # выполняем то, что определили функциями выше
 ############################################################# 
