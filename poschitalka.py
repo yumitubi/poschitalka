@@ -83,7 +83,8 @@ class poschitalka(gtk.Window):
         # пункт меню сохранить статистику
         savestat = gtk.MenuItem("Сохранить статистику")
         filemenu.append(savestat)
-
+        savestat.connect("activate", SaveStat().save_stat_txt)
+        
         # пункт меню выход
         close = gtk.MenuItem("Выход")
         close.connect("activate", gtk.main_quit)#по нажатии закрываем программу
@@ -403,6 +404,7 @@ class SaveStat:
         save_stat_file.write(s_words.replace('\n', ' ')+'\n') 
 
         save_stat_file.close()
+
 
 ############################################################
 # выполняем то, что определили функциями выше
