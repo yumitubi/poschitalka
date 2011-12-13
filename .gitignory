@@ -1,5 +1,5 @@
 *~
 *.pyc
 tests/
-ropemacs/
+.ropeproject/
 *.txt
