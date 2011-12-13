@@ -24,7 +24,7 @@ import string
 ####################################
 # подключаем самописанные модули
 ######################################
-import aboutpunkt # диалог about
+# import aboutpunkt # диалог about
 
 #################################
 #определяем глобальные переменные
@@ -92,19 +92,19 @@ class poschitalka(gtk.Window):
 
         # меню справка 
         helpmenu = gtk.Menu()
-        helper = gtk.MenuItem("Справка")
+        helper = gtk.MenuItem("О программе")
         helper.set_submenu(helpmenu)
 
         # пункт меню справка
-        helperitem = gtk.MenuItem("Справка")
-        helpmenu.append(helperitem)
+        # helperitem = gtk.MenuItem("Справка")
+        # helpmenu.append(helperitem)
 
         #########################################
         # пункт меню о программе
         # создаем объект класса aboutm
         about = gtk.MenuItem("О программе")
         helpmenu.append(about)
-        about.connect("activate", aboutpunkt.on_clk_about)#диалог О программе
+        about.connect("activate", self.on_clk_about)#диалог О программе
 
         # добавляем созданные меню в меню бар
         menub.append(filem)
@@ -201,6 +201,18 @@ class poschitalka(gtk.Window):
         # вывод созданных объектов на экран
         self.add(table)#добавляем table в окно
         self.show_all()#даем команду все показать
+
+
+    def on_clk_about(poschitalka, w):
+        about = gtk.AboutDialog()
+        about.set_program_name("Посчиталка")
+        about.set_version("0.11 alfa")
+        about.set_copyright("(c) М.Томилов")
+        about.set_comments("Эта небольшая программа предназначена для подсчета и вывода статистики по тексту")
+        about.set_website("http://le087.ru")
+        # about.set_logo(gtk.gdk.pixbuf_new_from_file("battery.png"))
+        about.run()
+        about.destroy()
 
 #####################################################
 # класс, который подсчитывает статистику по тексту
