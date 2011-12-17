@@ -120,18 +120,24 @@ class poschitalka(gtk.Window):
         # сохранить статистику
         btn_save_stat = gtk.Button("Сохранить статистику")
         btn_save_stat.set_tooltip_text("Нажмите, что бы сохранить статистику по тексту в файл")
-        btn_save_stat.set_size_request(190, 30)
+        btn_save_stat.set_size_request(170, 30)
         btn_save_stat.connect("clicked", SaveStat().save_stat_txt)
         
         # тестовая кнопка
         btn_test = gtk.Button("Открыть файл")
         btn_test.connect("clicked", FileSelectionNum().on_clk_open)
-        btn_test.set_size_request(130, 30)
+        btn_test.set_size_request(115, 30)
         
         # подсчет статистики
         btn_stat = gtk.Button("Подсчитать")
         btn_stat.connect("clicked", SymbolCalculate().push_all)
         btn_stat.set_size_request(100, 30)
+
+        # очистка текстового буфера
+        btn_clear = gtk.Button("Очистить")
+        btn_clear.set_tooltip_text("Очистить текстовый буфер")        
+        btn_clear.connect("clicked", self.clear_tb)
+        btn_clear.set_size_request(80, 30)
 
         # создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -196,7 +202,9 @@ class poschitalka(gtk.Window):
         table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
         table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
         table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку
+        table.attach(btn_clear, 0, 1, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)# кнопка очистить
 
+        
         ################################################
         # вывод созданных объектов на экран
         self.add(table)#добавляем table в окно
@@ -213,6 +221,11 @@ class poschitalka(gtk.Window):
         # about.set_logo(gtk.gdk.pixbuf_new_from_file("battery.png"))
         about.run()
         about.destroy()
+
+
+    def clear_tb(poschitalka, w):
+        txtbuf.set_text('')
+
 
 #####################################################
 # класс, который подсчитывает статистику по тексту
@@ -423,3 +436,5 @@ gtk.main()
 #######################################
 #-------- THE END PROGRAMM -----------#
 #######################################
+
+    
