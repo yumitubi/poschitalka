@@ -17,9 +17,9 @@ except:
      print 'Не удалось импортировать модуль PyGTK'
      sys.exit(1)
 
-import gtk, sys 
-import os
-import string
+import gtk #, sys 
+# import os
+# import string
 
 ####################################
 # подключаем самописанные модули
@@ -40,7 +40,7 @@ titlestat = gtk.Label("Статистика текста для файла: ")
 sum_char_spase_label = gtk.Label("Количество символов\nс пробелами: ")
 sum_char_label = gtk.Label("Количество символов\nбез пробелов: ")
 average_word = gtk.Label("Средняя длина\nслова: ")
-average_word_in_sentence = gtk.Label("Среднее количество\nслов в предложении: ")
+average_word_in_sentence = gtk.Label("Среднее количество слов\nв предложении: ")
 average_sentence_in_parag = gtk.Label("Среднее количество\nпредложений в абзаце: ")
 paragraph = gtk.Label("Количество\nабзацев: ")
 words = gtk.Label("Количество слов\nв тексте: ")
@@ -64,7 +64,7 @@ class poschitalka(gtk.Window):
         self.set_title("Посчиталка")#обзываем заголовок
         self.set_size_request(650,550)#размеры окна
         self.set_position(gtk.WIN_POS_CENTER)#ставим окно по центру
-        self.connect("destroy", gtk.main_quit)#обработчик кнопки на закрытие окна
+        self.connect("destroy", gtk.main_quit)#обработчик кнопки на закрытие 
 
         #############################################
         # рисуем меню
@@ -225,6 +225,13 @@ class poschitalka(gtk.Window):
 
     def clear_tb(poschitalka, w):
         txtbuf.set_text('')
+        sum_char_spase_label.set_text('Количество символов\nс пробелами: ')
+        sum_char_label.set_text('Количество символов\nбез пробелов: ')
+        average_word.set_text('Средняя длина\nслова: ')
+        average_word_in_sentence.set_text('Среднее количество слов\nв предложении: ')
+        average_sentence_in_parag.set_text('Среднее количество\nпредложений в абзаце: ')
+        paragraph.set_text('Количество\nабзацев: ')
+        words.set_text('Количество слов\nв тексте: ')
 
 
 #####################################################
@@ -436,5 +443,3 @@ gtk.main()
 #######################################
 #-------- THE END PROGRAMM -----------#
 #######################################
-
-    
