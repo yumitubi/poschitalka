@@ -27,12 +27,12 @@ import gtk #, sys
 # import aboutpunkt # диалог about
 
 #################################
-#определяем глобальные переменные
+# определяем глобальные переменные
 ###################################
 
-#текстовый буфер
+# текстовые буферы
 txtbuf = gtk.TextBuffer()
-#создаем текстовый буфер для помещения туда текста
+# создаем текстовый буфер для помещения туда текста
 txtbuf.set_text('')
 
 # переменные для статистики текста
@@ -115,7 +115,7 @@ class poschitalka(gtk.Window):
         btn_close = gtk.Button("Выход")#рисуем кнопку выход, тем не менее, для нее еще нужен будет обработчик
         btn_close.connect("clicked", gtk.main_quit)#обрабатываем клик на кнопку, как закрытие окна
         btn_close.set_tooltip_text("Нажмите, чтобы выйти из программы")
-        btn_close.set_size_request(65, 30)
+        btn_close.set_size_request(120, 30)
 
         # сохранить статистику
         btn_save_stat = gtk.Button("Сохранить статистику")
@@ -126,18 +126,18 @@ class poschitalka(gtk.Window):
         # тестовая кнопка
         btn_test = gtk.Button("Открыть файл")
         btn_test.connect("clicked", FileSelectionNum().on_clk_open)
-        btn_test.set_size_request(115, 30)
+        btn_test.set_size_request(170, 30)
         
         # подсчет статистики
         btn_stat = gtk.Button("Подсчитать")
         btn_stat.connect("clicked", SymbolCalculate().push_all)
-        btn_stat.set_size_request(100, 30)
+        btn_stat.set_size_request(120, 30)
 
         # очистка текстового буфера
         btn_clear = gtk.Button("Очистить")
         btn_clear.set_tooltip_text("Очистить текстовый буфер")        
         btn_clear.connect("clicked", self.clear_tb)
-        btn_clear.set_size_request(80, 30)
+        btn_clear.set_size_request(120, 30)
 
         # создаем область для прокручивания
         scroolwin = gtk.ScrolledWindow()
@@ -180,31 +180,33 @@ class poschitalka(gtk.Window):
         halign_sentence_in_parag.add(average_sentence_in_parag)
         halign_words = gtk.Alignment(0, 0, 0, 0)
         halign_words.add(words)
+        # halign_bar = gtk.Alignment(0, 0, 0, 0)
+        # halign_bar.add(statusbar)
         menualign = gtk.Alignment(0, 0, 0, 0)
         menualign.add(menub)
         menualign
 
         #таблица для разметки содержимого
-        table = gtk.Table(10, 8, True)
+        table = gtk.Table(17, 16, True)
         table.set_row_spacings(4)#устанавливаем расстояния между строчками таблицы
         table.set_col_spacings(4)#устанавливаем расстояния между столбцами таблицы
         table.attach(menualign, 0, 8, 0, 1, gtk.FILL, gtk.FILL, 1, 1)
-        table.attach(btn_close, 7, 8, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку close
-        table.attach(scroolwin, 0, 5, 1, 9, gtk.FILL, gtk.FILL, 1, 1)#добавляем прокручиваемое поле
-        table.attach(halign, 5, 8, 1, 2, gtk.FILL, gtk.FILL, 0, 0)# надпись статистика текста
-        table.attach(halign_sum_char_with, 5, 8, 2, 3, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов с пробелами
-        table.attach(halign_sum_char_out, 5, 8, 3, 4, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов без пробелов
-        table.attach(halign_average_word, 5, 8, 4, 5, gtk.FILL, gtk.FILL, 0, 0)#среднее количество букв в слове
-        table.attach(halign_average_word_in_sentence, 5, 8, 5, 6, gtk.FILL, gtk.FILL, 0, 0)#среднее количество слов в предложении
-        table.attach(halign_sentence_in_parag, 5, 8, 6, 7, gtk.FILL, gtk.FILL, 0, 0)#среднее количество предложений в абзаце
-        table.attach(halign_paragr, 5, 8, 7, 8, gtk.FILL, gtk.FILL, 0, 0)#количество абзацев
-        table.attach(halign_words, 5, 8, 8, 9, gtk.FILL, gtk.FILL, 0, 0)#количество слов
-        table.attach(btn_save_stat, 4, 7, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
-        table.attach(btn_test, 3, 4, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
-        table.attach(btn_stat, 1, 3, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку
-        table.attach(btn_clear, 0, 1, 9, 10, gtk.EXPAND, gtk.EXPAND, 1, 1)# кнопка очистить
+        table.attach(btn_close, 1, 4, 15, 16, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку close
+        table.attach(scroolwin, 0, 12, 1, 14, gtk.FILL, gtk.FILL, 1, 1)#добавляем прокручиваемое поле
+        table.attach(halign, 12, 19, 1, 3, gtk.FILL, gtk.FILL, 0, 0)# надпись статистика текста
+        table.attach(halign_sum_char_with, 12, 19, 3, 5, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов с пробелами
+        table.attach(halign_sum_char_out, 12, 19, 5, 7, gtk.FILL, gtk.FILL, 0, 0)#надпись количество символов без пробелов
+        table.attach(halign_average_word, 12, 19, 7, 9, gtk.FILL, gtk.FILL, 0, 0)#среднее количество букв в слове
+        table.attach(halign_average_word_in_sentence, 12, 19, 9, 11, gtk.FILL, gtk.FILL, 0, 0)#среднее количество слов в предложении
+        table.attach(halign_sentence_in_parag, 12, 19, 11, 13, gtk.FILL, gtk.FILL, 0, 0)#среднее количество предложений в абзаце
+        table.attach(halign_paragr, 12, 19, 13, 15, gtk.FILL, gtk.FILL, 0, 0)#количество абзацев
+        table.attach(halign_words, 12, 19, 15, 17, gtk.FILL, gtk.FILL, 0, 0)#количество слов
+        table.attach(btn_save_stat, 1, 6, 14, 15, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку сохранить статистику
+        table.attach(btn_test, 6, 11, 14, 15, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку test
+        table.attach(btn_stat, 8, 11, 15, 16, gtk.EXPAND, gtk.EXPAND, 1, 1)#добавляем кнопку
+        table.attach(btn_clear, 4, 8, 15, 16, gtk.EXPAND, gtk.EXPAND, 1, 1)# кнопка очистить
+        # table.attach(halign_bar, 1, 19, 16, 17, gtk.FILL, gtk.FILL, 1, 1)# статус бар
 
-        
         ################################################
         # вывод созданных объектов на экран
         self.add(table)#добавляем table в окно
@@ -403,7 +405,6 @@ class FileSelectionNum:
 class SaveStat:
 
     def save_stat_txt(SaveStat, w):
-
 
         save_stat_file = open('Statistics Text.txt', 'w')      
 
